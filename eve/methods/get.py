@@ -252,7 +252,7 @@ def _perform_find(resource, lookup):
     .. versionadded:: 0.7
     """
     documents = []
-    response = {}
+    response = []
     etag = None
     req = parse_request(resource)
     embedded_fields = resolve_embedded_fields(resource, req)
@@ -270,7 +270,8 @@ def _perform_find(resource, lookup):
     # deleted unless req.show_deleted is True
     for document in cursor:
         build_response_document(document, resource, embedded_fields)
-        documents.append(document)
+        #documents.append(document)
+        response.append(document)
 
         # build last update for entire response
         if document[config.LAST_UPDATED] > last_update:
@@ -280,17 +281,17 @@ def _perform_find(resource, lookup):
     headers = []
     last_modified = last_update if last_update > epoch() else None
 
-    response[config.ITEMS] = documents
+    #response[config.ITEMS] = documents
 
     if count is not None:
         headers.append((config.HEADER_TOTAL_COUNT, count))
 
-    if config.DOMAIN[resource]["hateoas"]:
-        response[config.LINKS] = _pagination_links(resource, req, count)
+    #if config.DOMAIN[resource]["hateoas"]:
+        #response[config.LINKS] = _pagination_links(resource, req, count)
 
     # add pagination info
-    if config.DOMAIN[resource]["pagination"]:
-        response[config.META] = _meta_links(req, count)
+    #if config.DOMAIN[resource]["pagination"]:
+        #response[config.META] = _meta_links(req, count)
 
     # notify registered callback functions. Please note that, should the
     # functions modify the documents, the last_modified and etag won't be
